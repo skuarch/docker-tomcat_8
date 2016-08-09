@@ -5,7 +5,7 @@ MAINTAINER Alfredo Bello <skuarch@yahoo.com.mx>
 ADD ./tomcat-users.xml ./server.xml /tmp/
 
 RUN apt-get update -y && \
-    apt-get install unzip curl -y && \
+    apt-get install curl -y && \
 
 ## install java
     curl -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "https://edelivery.oracle.com/otn-pub/java/jdk/8u91-b14/jdk-8u91-linux-x64.tar.gz" && \
@@ -22,29 +22,28 @@ RUN apt-get update -y && \
 
 ## install tomcat
     curl -L -O http://mirror.nexcess.net/apache/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.tar.gz && \
-    tar -xf /apache-tomcat-8.0.36.tar.gz && \
-    mkdir /opt/tomcat && \    
-    mv /apache-tomcat-8.0.33 /opt/tomcat && \
-    chmod 777 -R /opt/tomcat && \
-    rm /opt/tomcat/conf/server.xml && \
-    mv /tmp/server.xml /opt/tomcat/conf/ && \
-    HUDSON_HOME=/opt/tomcat && \
-    CATALINA_HOME=/opt/tomcat && \
-    export HUDSON_HOME=/opt/tomcat && \
-    export CATALINA_HOME=/opt/tomcat && \
+    tar -xvf /apache-tomcat-8.0.36.tar.gz && \    
+    mv /apache-tomcat-8.0.36 /opt/ && \
+    chmod 777 -R /opt/apache-tomcat-8.0.36 && \
+    rm /opt/apache-tomcat-8.0.36/conf/server.xml && \
+    mv /tmp/server.xml /opt/apache-tomcat-8.0.36/conf/ && \
+    HUDSON_HOME=/opt/apache-tomcat-8.0.36 && \
+    CATALINA_HOME=/opt/apache-tomcat-8.0.36 && \
+    export HUDSON_HOME=/opt/apache-tomcat-8.0.36 && \
+    export CATALINA_HOME=/opt/apache-tomcat-8.0.36 && \
 
 ## create user
-   rm /opt/tomcat/conf/tomcat-users.xml && \    
-   mv /tmp/tomcat-users.xml /opt/tomcat/conf/ && \       
+   rm /opt/apache-tomcat-8.0.36/conf/tomcat-users.xml && \    
+   mv /tmp/tomcat-users.xml /opt/apache-tomcat-8.0.36/conf/ && \       
 
 ## clean up    
    rm -rf /tmp/* && \
    rm /apache-tomcat-8.0.36.tar.gz && \
    rm /jdk-8u91-linux-x64.tar.gz
 
-WORKDIR /opt/tomcat
-VOLUME /opt/tomcat/webapps
+WORKDIR /opt/apache-tomcat-8.0.36
+VOLUME /opt/apache-tomcat-8.0.36/webapps
 
 EXPOSE 3030
 
-CMD /opt/tomcat/bin/catalina.sh run
+CMD /opt/apache-tomcat-8.0.36/bin/catalina.sh run
